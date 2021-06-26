@@ -6,11 +6,12 @@ use solana_program::{
     msg,
     program_error::{ PrintProgramError, ProgramError },
 };
-use thiserror::Error;
 
 pub use solana_program::program_error::PrintProgramError as PrintHelloWorldError;
 
-#[derive(Clone, Debug, Eq, Error, FromPrimitive, PartialEq)]
+use thiserror::Error;
+
+#[derive(Clone, Debug, Eq, Error, DeriveFromPrimitive, PartialEq)]
 pub enum HelloWorldError {
     #[error("Invalid instruction")]
     InvalidInstruction,
@@ -40,9 +41,9 @@ impl<T> DecodeError<T> for HelloWorldError {
     }
 }
 
-impl PrintHelloWorldError for HelloWorldError {
+impl PrintProgramError for HelloWorldError {
     fn print<E>(&self) where 
-        E: 'static + std::error::Error + DecodeError<E> PrintHelloWorldError + FromPrimitive {
+        E: 'static + std::error::Error + DecodeError<E> + PrintProgramError + FromPrimitive {
         match self {
             HelloWorldError::InvalidInstruction => msg!("Error: Invalid instruction"),
             HelloWorldError::InvalidOwner => msg!("Error: invalid owner"),

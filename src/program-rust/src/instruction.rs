@@ -1,4 +1,4 @@
-use error::HelloWorldError;
+use std::convert::TryInto;
 
 use solana_program::{
     program_error::ProgramError,
