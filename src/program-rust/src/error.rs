@@ -1,5 +1,4 @@
 use num_derive::FromPrimitive as DeriveFromPrimitive;
-use num_traits::FromPrimitive;
 
 use solana_program::{
     decode_error::DecodeError,
@@ -43,10 +42,11 @@ impl<T> DecodeError<T> for HelloWorldError {
 
 impl PrintProgramError for HelloWorldError {
     fn print<E>(&self) where 
-        E: 'static + std::error::Error + DecodeError<E> + PrintProgramError + FromPrimitive {
+        E: 'static + std::error::Error + DecodeError<E> + PrintProgramError + num_traits::FromPrimitive {
         match self {
             HelloWorldError::InvalidInstruction => msg!("Error: Invalid instruction"),
             HelloWorldError::InvalidOwner => msg!("Error: invalid owner"),
+            HelloWorldError::NotInitialized => msg!("Error: not initialized"),
             HelloWorldError::IncorrectTokenId => msg!("Error: incorrect token id"),
             HelloWorldError::UnsafeUnderflow => msg!("Error: Operation underflow"),
         }

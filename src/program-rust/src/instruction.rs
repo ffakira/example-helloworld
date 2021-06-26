@@ -32,6 +32,7 @@ impl HelloWorldInstruction {
                 match tag {
                     0 => Self::Increment { amount },
                     1 => Self::Decrement { amount },
+                    _ => return Err(ProgramError::InvalidInstructionData),
                 }
             },
             _ => return Err(ProgramError::InvalidInstructionData),

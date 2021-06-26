@@ -32,10 +32,38 @@ impl Processor {
                 }
 
                 let mut counter_data = Counter::unpack_unchecked(&account.data.borrow())?;
+                if !counter_data.is_initialized() {
+                    return Err(HelloWorldError::NotInitialized.into());
+                }
+
+                counter_data.amount += 1;
+                counter_data.initialized = true;
+                Counter::pack(counter_data, &mut account.data.borrow_mut())?;
+                
+                msg!{"Greeted {} time(s)!", amount};
+                
+            }
+
+            HelloWorldInstruction::Decrement { amount } => {
+                msg!("[helloworld_instruction -> decrement]: function called");
+
+                let accounts_iter = &mut accounts.iter();
+                let account = next_account_info(accounts_iter)?;
+
+                if account.owner != program_id {
+                    return Err(HelloWorldError::IncorrectTokenId.into());
+                }
+
+                let mut counter_data = Counter::unpack_unchecked(&account.data.borrow())?;
 
                 if !counter_data.is_initialized() {
                     return Err(HelloWorldError::NotInitialized.into());
                 }
+
+                counter_data.amount -= 1;
+                Counter::pack(counter_data, &mut account.data.borrow_mut())?;
+
+                msg!{"Greeted {} time(s)!", amount};
             }
         }
 
